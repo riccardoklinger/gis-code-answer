@@ -12,7 +12,13 @@ To create a minimum data quality check we select only data points within a regio
 ## Steps
 * First we will filter the data (as mentioned above!)
 * create a [DBSCAN](http://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html) result dataset 
-* project resulting cluster centers to streets 
+* project resulting cluster centers to street points from OSM
+* export points to leaflet webmap with folium
 
+## Needed modules
+For full functoionality different modules needs to get installed on the client side:
+```
+sudo pip install overpy pandas geopy sklearn folium
+```
 
 
