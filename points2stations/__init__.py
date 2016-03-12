@@ -131,8 +131,8 @@ def createStation(filteredSetFile,osmFile):
 	dataF["crs"] = { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } }
 	dataF['features']= []
 	for point in rsProjected:
-		dataF['features'].append({"geometry": {"type": "Point", "coordinates": [point.x, point.y]}, "type": "Feature", "properties": {"previous_dominating_activity": "still", "bearing": 0, "route": "", "previous_dominating_activity_confidence": 60, "current_dominating_activity": "in_vehicle", "current_dominating_activity_confidence": 77, "timestamp": "2015-11-11T09:03:01+0300", "created_at": "2015-11-11 06:03:12", "feature": "passive_tracking", "id": 4, "speed": 0, "altitude": 0.0, "accuracy": 23.0}})
-	with open("data/potential_bus_stations.gojson", 'w') as outfile:
+		dataF['features'].append({"geometry": {"type": "Point", "coordinates": [point.x, point.y]}, "type": "Feature", "properties": {"type": "bus station"}})
+	with open("data/potential_bus_stations.geojson", 'w') as outfile:
 		json.dump(dataF, outfile)
 def getCentroid(points):
 	import numpy as np
@@ -156,8 +156,9 @@ def getNearestPoint(set_of_points, point_of_reference):
 def createMap(f):
 	#we will use folium to create webmaps right out of python
 	import folium
-	stations_path = f
-	
-	map_osm = folium.Map(location=[45.5236, -122.6750])
-	map_osm.geo_json(geo_path=stations_path)
+	with open(f) as file:
+		stations = json.load(file)
+	map_osm = folium.Map(location=[-6.8048, 39.2865])
+	for station in stations["features"]:
+		map_osm.circle_marker(location = [station["geometry"]["coordinates"][1],station["geometry"]["coordinates"][0]], radius=20,popup="type: Bus Station")
 	map_osm.create_map(path='osm.html')
