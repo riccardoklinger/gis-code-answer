@@ -85,25 +85,23 @@ def simplifyPoints(f,eps,min):
 	plt.xlabel('Lon')
 	plt.ylabel('Lat')
 	plt.show()
-def collect_ways(f): #get ways for a bounding box imported with a GeoJSON file
-	import overpy
-	api = overpy.Overpass()
+def collect_ways(f, out_file): #get ways for a bounding box imported with a GeoJSON file and store them as a list of points
+	import json, urllib
 	with open(f) as file:
 		data = json.load(file)
-	N = []
-	E = []
-	S = []
-	W = []
+
 	lon = []
 	lat = []
 	for feature in data["features"]:
 		lat.append(feature["geometry"]["coordinates"][1])
 		lon.append(feature["geometry"]["coordinates"][0])
 	bb = [min(lat), min(lon), max(lat), max(lon)]
-	print "[out:json];node("+str(bb).strip('[]')+");out;"
-	result = api.query("[out:json];way("+str(bb).strip('[]')+");out;")
-	print len(result.ways)
-	print result.ways[0].get_nodes(resolve_missing=True)
+	url = 'http://overpass-api.de/api/interpreter?data=[out:json][bbox:' + str(bb).strip('[]') +'];way["highway"];(._;>;);out geom;'
+	response = urllib.urlopen(url)
+	data2 = json.loads(response.read())
+	with open(out_file, 'w') as outfile:
+		json.dump(data2, outfile)
+
 def getCentroid(points):
 	import numpy as np
 	n = points.shape[0]

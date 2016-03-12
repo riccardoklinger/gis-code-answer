@@ -18,7 +18,7 @@ To create a minimum data quality check we select only data points within a regio
 ## Needed modules
 For full functoionality different modules needs to get installed on the client side:
 ```
-sudo pip install overpy pandas geopy sklearn folium
+sudo pip install pandas geopy sklearn folium
 ```
 
 
