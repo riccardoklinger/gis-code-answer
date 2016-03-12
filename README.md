@@ -23,7 +23,14 @@ sudo pip install pandas geopy sklearn folium
 ```
 ## algorithm description
 The points will be filtered by a very broad filter to consider only points with speed equals "0". Another option would be to select only points with a change of "previous_dominating_activity" to "current_dominating_activity" and a speed infomation. Yet using this option on the data would decrease the number of data points way to much!
-After the first filtering we will use the DBSCAN algorithm to find centers of the points using a defined region (epsilon of 0.001 in this output) and a minimum number of points for a cluster center of two in the given radius. A higher radius will decrease the number of potential centers as well as a higher number of points within a cluster
- 
+
+After the first filtering we will use the DBSCAN algorithm to find centers of the points using a defined region (epsilon of 0.001 in this output) and a minimum number of points for a cluster center of two in the given radius. A higher radius will decrease the number of potential centers as well as a higher number of points within a cluster.
+
+Seperately we will need an OSM extract of the bounding box of the input points. Therefore we use the overpass API to fetch only ways and their nodes in the bounding box.
+
+As the projection function from shapely works on (Multi)LineString objects we will parse the OSM extract (JSON) to a MultiLineString. 
+
+In the end we project the cluster centers to the nearest point of the street-structure and use those projected points as potential bus stop locations.
+
 
 
