@@ -32,5 +32,19 @@ As the projection function from shapely works on (Multi)LineString objects we wi
 
 In the end we project the cluster centers to the nearest point of the street-structure and use those projected points as potential bus stop locations.
 
+The webmap itself is produced from within python using a basic folium export without any further processing. the popups and the design of the webmap can be improved afterwards by reading and enhancing the osm.html file using python or a simple editor to do it by hand.
+
+## reproducing the map
+```
+os.chdir(path) #path needs to be the git folder
+import points2stations as p2s
+p2s.filterPoints("data/activity_points.geojson", "data/filtered_points.geojson")
+p2s.simplifyPoints("data/filtered_points.geojson", 0.001, 2) # actual not needed but as a first preview of clustern
+p2s.collectWays("data/filtered_points.geojson","data/osm_waypoints.json") # downloads the major street network and stores it in a distinct file.
+p2s.createStations("data/filtered_points.geojson","data/osm_waypoints.json", 0.001,2, "data/potential_bus_stops.geojson") # this is the main function which calles the simplifyPoints as well as getLineStrings
+p2s.createMap("data/potential_bus_stops.geojson","data/activity_points.geojson") # this will create a very simple webmap with the results. There are better ways to create a visualization within leaflet by adopting the html and js by hand. Unfortunately the possibilities with folium are limited but it gives a first overview of the results. 
+
+
+
 
 
